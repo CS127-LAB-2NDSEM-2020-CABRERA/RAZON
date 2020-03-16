@@ -64,9 +64,9 @@ class Products(Resource):
 			print(products)
 			productsList.append(vars(ProductModel(product[1],product[2],product[3],product[4])))
 		if (id < 1):
-			return 'Input a correct product ID'
+			return 'Input a correct product ID', 400
 		elif (id > len(productsList)):
-			return 'No product has a product ID number of %s' % id
+			return 'No product has a product ID number of %s' % id, 404
 		else:
 			return productsList[_prodID], 200
 		
@@ -75,7 +75,10 @@ class Products(Resource):
 		delete_product = "DELETE FROM products WHERE id=%s" % id
 		products = execute_query(delete_product)
 		
-		return 'Product with product number %s is deleted' %id, 200
+		if len(product) == 0:
+			return 'no product present', 404
+		else:
+			return 'Product with product number %s is deleted' %id, 200
 
 	@productRoutes.expect(product)
 	def put(self,id):
@@ -83,19 +86,22 @@ class Products(Resource):
 		product_update = "SELECT * from products WHERE id = %s" % id
 		product_To_update = execute_read_query(product_update)
 
-		_payload = api.payload
-		product_To_update = _payload
+		if len(product_To_update) == 0:
+			return 'no product present', 404
+		else: 
+			_payload = api.payload
+			product_To_update = _payload
 
-		_name = product_To_update['name']
-		_description = product_To_update['description']
-		_price = product_To_update['price']
-		_qty = product_To_update['qty']
-		
-		update_exec_query = "UPDATE products SET name = '{}', description = '{}', price = {}, qty = {} WHERE id = {}".format(_name, _description,_price,_qty, id)
+			_name = product_To_update['name']
+			_description = product_To_update['description']
+			_price = product_To_update['price']
+			_qty = product_To_update['qty']
+			
+			update_exec_query = "UPDATE products SET name = '{}', description = '{}', price = {}, qty = {} WHERE id = {}".format(_name, _description,_price,_qty, id)
 
-		fin = execute_read_query(update_exec_query)
+			fin = execute_read_query(update_exec_query)
 
-		return fin, 200
+			return fin, 200
 
 
 # Run Server
