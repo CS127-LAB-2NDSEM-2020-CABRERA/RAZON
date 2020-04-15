@@ -48,7 +48,7 @@ class ProductsList(Resource):
 		productsList = []
 		for product in products:
 			print(products)
-			productsList.append(vars(ProductModel(product[0],product[1],product[2],product[3])))
+			productsList.append(vars(ProductModel(product[1],product[2],product[3],product[4])))
 		return productsList, 200
 
 
@@ -62,7 +62,7 @@ class Products(Resource):
 		productsList = []
 		for product in products:
 			print(products)
-			productsList.append(vars(ProductModel(product[0],product[1],product[2],product[3])))
+			productsList.append(vars(ProductModel(product[1],product[2],product[3],product[4])))
 		if (id < 1):
 			return 'Input a correct product ID', 400
 		elif (id > len(productsList)):
